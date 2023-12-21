@@ -3,6 +3,7 @@ import {GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthState
 import {createContext, useEffect, useState} from "react";
 import PropTypes from 'prop-types'
 import axios from "axios";
+import useAxiosPublic from "../AxiosFiles/useAxiosPublic.jsx";
 
 const auth = getAuth(app)
 
@@ -12,6 +13,7 @@ const GoogleProvider = new GoogleAuthProvider();
 const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true);
+    const axiosPublic = useAxiosPublic();
 
     const createUser = (name, email, password, photoURL) => {
         setLoading(true);
@@ -47,31 +49,28 @@ const AuthProvider = ({children}) => {
 
 
     useEffect(() => {
-        const unSubscribe = onAuthStateChanged(auth, currentUser => {
-
-            const userEmail = currentUser?.email || user?.email;
-            const loggedUser = {email: userEmail};
+        const unsubscribe = onAuthStateChanged(auth, currentUser => {
             setUser(currentUser);
-            setLoading(false);
+            // console.log('current user', currentUser);
             if(currentUser){
-                axios.post('http://localhost:3000/jwt', loggedUser, {withCredentials: true})
+                const userInfo = {email: currentUser.email};
+                axiosPublic.post('/jwt', userInfo)
                     .then(res => {
-                        console.log('token response', res.data);
-                    })
-            } else {
-                axios.post('http://localhost:3000/logout', loggedUser, {
-                    withCredentials: true
-                })
-                    .then(res => {
-                        console.log(res.data)
+                        if(res.data.token){
+                            localStorage.setItem('access-token', res.data.token);
+                            setLoading(false);
+                        }
                     })
             }
+            else {
+                localStorage.removeItem('access-token');
+                setLoading(false);
+            }
         })
-
         return () => {
-            unSubscribe();
+            unsubscribe();
         }
-    }, [user?.email])
+    }, [axiosPublic])
 
     const authInfo = { user, setUser, createUser, signInUser, logOut, loading, signinwithGoogle }
 

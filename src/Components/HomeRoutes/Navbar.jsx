@@ -21,10 +21,10 @@ const Navbar = () => {
                     <div>
                         <Link to="/"><h1 className="text-2xl font-bold">Tasky</h1></Link>
                     </div>
-                    <div>
+                    <div className="hidden md:block">
                         <ul className="flex justify-center gap-5 font-semibold">
                             <ul className="flex justify-center gap-5">
-                                <li className="btn btn-ghost">About</li>
+                                <Link to="/about"><li className="btn btn-ghost">About</li></Link>
                                 {
                                     !user ? <>
                                         <Link to="/logins"><li className="btn btn-ghost">SignIn</li></Link>
@@ -32,7 +32,7 @@ const Navbar = () => {
                                     </> : ''
                                 }
 
-                                <li className="btn btn-ghost">DashBoard</li>
+                                <Link to="/dashboard"><li className="btn btn-ghost">DashBoard</li></Link>
                             </ul>
                         </ul>
                     </div>
@@ -57,7 +57,23 @@ const Navbar = () => {
                                             <Link to="/">
                                                 <li>
                                                     <button>
+                                                        Home
+                                                    </button>
+                                                </li>
+                                            </Link>
+
+                                            <Link to="/dashboard" className="md:hidden block">
+                                                <li>
+                                                    <button>
                                                         Dashboard
+                                                    </button>
+                                                </li>
+                                            </Link>
+
+                                            <Link to="/about" className="md:hidden block">
+                                                <li>
+                                                    <button>
+                                                        About
                                                     </button>
                                                 </li>
                                             </Link>

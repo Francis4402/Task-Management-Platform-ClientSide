@@ -2,12 +2,16 @@ import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import {FaEye, FaEyeSlash} from 'react-icons/fa'
 import useAuth from "../Hooks/useAuth.jsx";
-import {Link} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import useAxiosPublic from "../AxiosFiles/useAxiosPublic.jsx";
 
 const Logins = () => {
 
     const [showPassword, setShowPassword] = useState(false);
-    const {signInUser, signinwithGoogle} = useAuth();
+    const {user, signInUser, signinwithGoogle} = useAuth();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const axiosPublic = useAxiosPublic();
 
     const handleloginwithpass = e => {
         e.preventDefault();
@@ -22,23 +26,38 @@ const Logins = () => {
         }
 
         signInUser(email, password)
-            .then(() => {
+            .then((res) => {
+                const loggedInUser = res.user;
+                console.log(loggedInUser)
+                const user = {email};
+                axiosPublic.post('/jwt', user, {withCredentials: true})
+                    .then(res => {
+                        if(res.data.success) {
+                            navigate(location?.state ? location?.state : '/')
+                        }
+                    })
                 toast.success('Login Successful')
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error(error)
                 toast.error('Email or password is incorrect')
             })
     }
 
-    const handlegoogleLogin = () => {
+    const handlegooglesignin = () => {
         signinwithGoogle()
             .then(() => {
-                toast.success('Login Sucessful')
+                axiosPublic.post('/jwt', user, {withCredentials: true})
+                    .then(res => {
+                        if(res.data.success){
+                            navigate(location?.state ? location?.state : '/')
+                        }
+                    })
+                toast.success('Login Successful')
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error(error)
-                toast.error('Email or password is incorrect')
+                toast.error('Check Your Email')
             })
     }
 
@@ -92,7 +111,7 @@ const Logins = () => {
                                     <p className="md:text-base text-sm">New To Website register now?</p>
                                     <Link className="btn btn-link" to='/register'><button>Register</button></Link>
                                 </div>
-                                <button onClick={handlegoogleLogin} className="btn btn-outline mt-3">Google Login</button>
+                                <button onClick={handlegooglesignin} className="btn btn-outline mt-3">Google Login</button>
                             </div>
 
                         </div>

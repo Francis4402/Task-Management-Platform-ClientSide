@@ -2,12 +2,16 @@ import {useState} from 'react';
 import useAuth from "../Hooks/useAuth.jsx";
 import {FaEye, FaEyeSlash} from 'react-icons/fa'
 import {toast} from "react-hot-toast";
-import {Link} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import useAxiosPublic from "../AxiosFiles/useAxiosPublic.jsx";
 
 const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const {createUser} = useAuth();
+    const axiosPublic = useAxiosPublic();
 
+    const location = useLocation();
+    const navigate = useNavigate();
     const handleRegister = e => {
         e.preventDefault();
         const name = e.target.name.value;
@@ -30,13 +34,21 @@ const Register = () => {
         }
 
         createUser(name, email, password, photoURL)
-            .then(res => {
-                console.log(res.user);
-                toast.success('User registration successful!')
+            .then((res) => {
+                const RegisterUser = res.user;
+                console.log(RegisterUser)
+                const user = {name, email};
+                axiosPublic.post('/jwt', user, {withCredentials: true})
+                    .then(res => {
+                        if(res.data.success){
+                            navigate(location?.state ? location?.state : '/')
+                        }
+                    })
+                toast.success('User Registration successful')
             })
             .catch(error => {
                 console.error(error)
-                toast.error('email already registered')
+                toast.error('Email Already registered')
             })
     }
 

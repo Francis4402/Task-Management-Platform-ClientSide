@@ -4,6 +4,9 @@ import Home from "../HomeRoutes/Home.jsx";
 import Logins from "../SignUpPates/Logins.jsx";
 import Register from "../SignUpPates/Register.jsx";
 import PrivateRoute2 from "../PrivateRoute/PrivateRoute2.jsx";
+import PrivateRoute from "../PrivateRoute/PrivateRoute.jsx";
+import Dashboard from "../DashBoard/Dashboard.jsx";
+import About from "../HomeRoutes/About.jsx";
 
 const Routes = createBrowserRouter([
     {
@@ -21,6 +24,14 @@ const Routes = createBrowserRouter([
             {
                 path: '/register',
                 element: <PrivateRoute2><Register/></PrivateRoute2>
+            },
+            {
+                path: '/dashboard',
+                element: <PrivateRoute><Dashboard/></PrivateRoute>
+            },
+            {
+                path: '/about',
+                element: <About/>
             }
         ]
     }
