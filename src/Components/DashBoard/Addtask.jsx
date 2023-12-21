@@ -1,15 +1,40 @@
-import {Link} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import useAuth from "../Hooks/useAuth.jsx";
+import useAxiosSecure from "../AxiosFiles/useAxiosSecure.jsx";
+import Swal from "sweetalert2";
 
 const Addtask = () => {
 
+    const axiosSecure = useAxiosSecure();
     const {user} = useAuth();
-
-    const handleaddtask = e => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const handleaddtask = async (e) => {
         e.preventDefault();
         const form = e.target;
         const title = form.title.value;
+        const email = user?.email;
+        const description = form.description.value;
+        const priority = form.priority.value;
 
+        const timestamp = new Date().toLocaleDateString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+        });
+
+        const myposts = {title, description, email, priority, timestamp}
+
+        const addPosts = await axiosSecure.post('/tasks', myposts);
+        if(addPosts.data.insertedId){
+            Swal.fire({
+                title: 'Success!',
+                text: 'Post Added Successfully',
+                icon: 'success',
+                confirmButtonText: 'ok'
+            })
+            navigate(location?.state ? location?.state : '/dashboard/usertasks')
+        }
     }
 
     return (
@@ -40,7 +65,7 @@ const Addtask = () => {
                                 <label className="label">
                                     <span className="label-text">Priority</span>
                                 </label>
-                                <select name="level" className="p-3 rounded-md bg-base-300 w-full" required>
+                                <select name="priority" className="p-3 rounded-md bg-base-300 w-full" required>
                                     <option value="">Select Category</option>
                                     <option value="easy">Low</option>
                                     <option value="medium">Moderate</option>
