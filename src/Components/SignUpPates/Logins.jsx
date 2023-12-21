@@ -63,7 +63,6 @@ const Logins = () => {
 
     return (
         <div>
-
             <Toaster position="top-center" reverseOrder={false} />
             <div className="h-[600px] hero bg-base-100">
                 <div className="hero-content p-2 flex-col">

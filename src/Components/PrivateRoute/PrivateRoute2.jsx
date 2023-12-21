@@ -19,7 +19,7 @@ const PrivateRoute2 = ({children}) => {
     }
 
 
-    return <Navigate to="/"/>
+    return <Navigate to="/dashboard"/>
 };
 
 PrivateRoute2.propTypes = {

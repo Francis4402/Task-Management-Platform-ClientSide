@@ -7,6 +7,8 @@ import PrivateRoute2 from "../PrivateRoute/PrivateRoute2.jsx";
 import PrivateRoute from "../PrivateRoute/PrivateRoute.jsx";
 import Dashboard from "../DashBoard/Dashboard.jsx";
 import About from "../HomeRoutes/About.jsx";
+import Addtask from "../DashBoard/Addtask.jsx";
+import MyTasks from "../DashBoard/MyTasks.jsx";
 
 const Routes = createBrowserRouter([
     {
@@ -26,12 +28,22 @@ const Routes = createBrowserRouter([
                 element: <PrivateRoute2><Register/></PrivateRoute2>
             },
             {
-                path: '/dashboard',
-                element: <PrivateRoute><Dashboard/></PrivateRoute>
-            },
-            {
                 path: '/about',
                 element: <About/>
+            }
+        ]
+    },
+    {
+        path: '/dashboard',
+        element: <PrivateRoute><Dashboard/></PrivateRoute>,
+        children: [
+            {
+                path: 'addtask',
+                element: <Addtask/>
+            },
+            {
+                path: 'usertasks',
+                element: <MyTasks/>
             }
         ]
     }
