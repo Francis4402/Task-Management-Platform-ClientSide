@@ -2,7 +2,6 @@ import app from "../Firebase/firebase.config.js";
 import {GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile} from "firebase/auth"
 import {createContext, useEffect, useState} from "react";
 import PropTypes from 'prop-types'
-import axios from "axios";
 import useAxiosPublic from "../AxiosFiles/useAxiosPublic.jsx";
 
 const auth = getAuth(app)
@@ -15,21 +14,9 @@ const AuthProvider = ({children}) => {
     const [loading, setLoading] = useState(true);
     const axiosPublic = useAxiosPublic();
 
-    const createUser = (name, email, password, photoURL) => {
+    const createUser = (email, password) => {
         setLoading(true);
-        return createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                return updateProfile(userCredential.user, {
-                    displayName: name,
-                    photoURL: photoURL
-                })
-                    .then(() => {
-                        return userCredential.user;
-                    })
-                    .catch(error => {
-                        throw error;
-                    })
-            })
+        return createUserWithEmailAndPassword(auth, email, password);
     }
 
     const signinwithGoogle = () => {
@@ -42,10 +29,19 @@ const AuthProvider = ({children}) => {
         return signInWithEmailAndPassword(auth, email, password)
     }
 
+    const updateUserProfile = (name, photoURL) => {
+        setLoading(true)
+        return updateProfile(auth.currentUser, {
+            displayName: name,
+            photoURL: photoURL,
+        })
+    }
+
     const logOut = () => {
         setLoading(true);
         return signOut(auth);
     }
+
 
 
     useEffect(() => {
@@ -72,7 +68,7 @@ const AuthProvider = ({children}) => {
         }
     }, [axiosPublic])
 
-    const authInfo = { user, setUser, createUser, signInUser, logOut, loading, signinwithGoogle }
+    const authInfo = { user, setUser, updateUserProfile, createUser, signInUser, logOut, loading, signinwithGoogle }
 
 
     return (

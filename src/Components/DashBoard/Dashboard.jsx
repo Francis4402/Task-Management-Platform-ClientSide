@@ -4,9 +4,10 @@ import {NavLink, Outlet} from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
 import {toast} from "react-hot-toast";
 import {BiTask} from "react-icons/bi";
+import DIsplayusers from "./DIsplayusers.jsx";
+import DisplayUsersProfile from "./DisplayUsersProfile.jsx";
 const Dashboard = () => {
-    const {user, logOut} = useAuth();
-
+    const {logOut} = useAuth();
     const handleLogout = () => {
         logOut()
             .then(() => {
@@ -20,12 +21,7 @@ const Dashboard = () => {
             <div className="sm:flex hidden">
                 <div className="w-64 min-h-screen border-r">
                     <ul className="menu sm:text-xl gap-4 text-center">
-                        <div className="justify-center grid gap-3 mt-10 text-black">
-                            <img className="rounded-full w-20 h-20" src={user?.photoURL} alt="i"/>
-                            <li className="font-semibold">
-                                {user?.displayName}
-                            </li>
-                        </div>
+                        <DisplayUsersProfile/>
                         <div className="border-b gap-5 grid">
                             <NavLink to="usertasks" className="flex items-center sm:gap-3 gap-1 hover:bg-gray-200 py-2 rounded-lg justify-center">
                                 <BiTask/>
@@ -53,6 +49,11 @@ const Dashboard = () => {
                             <button onClick={handleLogout} className="btn btn-outline">LogOut</button>
                         </div>
                     </div>
+                    <div className="justify-center flex">
+                        <div className="w-80">
+                            <DIsplayusers/>
+                        </div>
+                    </div>
                     <div>
                         <Outlet/>
                     </div>
@@ -66,6 +67,11 @@ const Dashboard = () => {
                         <label htmlFor="my-drawer" className="btn btn-outline drawer-button"><FaBars/></label>
                         <button onClick={handleLogout} className="btn btn-outline">Logout</button>
                     </div>
+                    <div className="justify-center flex">
+                        <div className="w-80">
+                            <DIsplayusers/>
+                        </div>
+                    </div>
                     <div>
                         <Outlet/>
                     </div>
@@ -74,10 +80,7 @@ const Dashboard = () => {
                     <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
                     <ul className="menu p-4 w-44 gap-5 min-h-full bg-base-200 text-base-content">
 
-                        <div className="justify-center grid text-center gap-3">
-                            <img className="rounded-full w-20 h-20" src={user?.photoURL} alt={"i"} />
-                            <h1 className="font-semibold">{user?.displayName}</h1>
-                        </div>
+                        <DisplayUsersProfile/>
 
                         <NavLink to="addtask"><li><a><FaPlus size={15}/> MyTasks</a></li></NavLink>
                         <NavLink to="addtask"><li><a><FaPlus size={15}/> AddTask</a></li></NavLink>

@@ -1,11 +1,12 @@
 import {Link} from "react-router-dom";
 import useAuth from "../Hooks/useAuth.jsx";
 import {toast} from "react-hot-toast";
+import useUsers from "../Hooks/useUsers.jsx";
 
 const Navbar = () => {
 
     const {user, logOut} = useAuth();
-
+    const [AllUsers] = useUsers();
     const handleLogout = () => {
         logOut()
             .then(() => {
@@ -74,16 +75,20 @@ const Navbar = () => {
                                     <div className="dropdown dropdown-end">
                                         <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                                             <div className="w-24 rounded-full">
-                                                <img src={user?.photoURL} alt="i" />
+                                                {
+                                                    AllUsers.map(myuser => <div key={myuser}><img src={myuser?.image} alt="i" /></div>)
+                                                }
+
                                             </div>
                                         </label>
                                         <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                                            <li>
-                                                <a>
-                                                    {user?.displayName}
-                                                </a>
-                                            </li>
-
+                                            {
+                                                AllUsers.map(username => <div key={username}><li>
+                                                    <a>
+                                                        {username?.name}
+                                                    </a>
+                                                </li></div>)
+                                            }
                                             <Link to="/">
                                                 <li>
                                                     <button>
